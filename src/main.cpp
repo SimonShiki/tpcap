@@ -8,10 +8,18 @@
 #define TPCAP_VERSION "0.0.1"
 
 std::atomic<bool> g_running{true};
+NetCap *g_netcap = nullptr;
 
 void quit(int signum) {
-  logInfo("Program gratefully stopping...");
-  g_running = false;
+  if (!g_running.exchange(false)) {
+    return;
+  }
+  logInfo("Program gracefully stopping...");
+  
+  // Break out of pcap_dispatch immediately
+  if (g_netcap != nullptr) {
+    g_netcap->breakCapture();
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -34,6 +42,7 @@ int main(int argc, char *argv[]) {
   }
 
   NetCap netcap(&logFile);
+  g_netcap = &netcap;
 
   if (argc >= 3) {
     netcap.setInterfaceName(argv[2]);
@@ -50,6 +59,7 @@ int main(int argc, char *argv[]) {
   netcap.startCapture(g_running);
 
   logInfo("Releasing TPCap...");
+  g_netcap = nullptr;
   netcap.dispose();
   logInfo("Closing log file...");
   logFile.close();

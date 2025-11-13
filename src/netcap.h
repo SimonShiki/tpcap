@@ -34,5 +34,6 @@ public:
 
   void init();
   void startCapture(const std::atomic<bool> &running);
+  void breakCapture();
   void dispose();
 };

@@ -159,6 +159,12 @@ void NetCap::startCapture(const std::atomic<bool> &running) {
   }
 }
 
+void NetCap::breakCapture() {
+  if (pcapHandle != nullptr) {
+    pcap_breakloop(pcapHandle);
+  }
+}
+
 void NetCap::dispose() {
   if (pcapHandle != nullptr) {
     pcap_close(pcapHandle);
