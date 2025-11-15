@@ -14,6 +14,8 @@ constexpr const char *CYAN = "\033[36m";
 constexpr const char *WHITE = "\033[37m";
 } // namespace UnixColor
 
+bool isOutputTTY(std::ostream &out);
+
 void logInfo(const std::string &msg, std::ostream &out = std::cout);
 void logWarn(const std::string &msg, std::ostream &out = std::cout);
 void logError(const std::string &msg, std::ostream &out = std::cerr);
